@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎁 Felices 29 Nathalia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  
+  <!-- Floating Balloons -->
+  <div class="balloon balloon-1">🎈</div>
+  <div class="balloon balloon-2">🎈</div>
+  <div class="balloon balloon-3">🎈</div>
+  <div class="balloon balloon-4">🎈</div>
+  <div class="balloon balloon-5">🎈</div>
+
+  <!-- Distributed Messages Across Screen -->
+  <div class="message-bubble message-top-left" id="message1">
+    🌸 Feliz cumpleaños, mujer maravillosa 🌸<br>
+    💕 Gracias por existir y por ser tan increíble 💕
+  </div>
+
+  
+  <div class="message-bubble message-left" id="message3">
+    🌹 Gracias por ser tan única, tan tú... tan especial. 🌹
+  </div>
+  
+  <div class="message-bubble message-right" id="message4">
+    💖 Tienes un corazón que ilumina donde va. 💖
+  </div>
+  
+  <div class="message-bubble message-bottom-center" id="message7">
+    💎 Eres más valiosa que cualquier joya en el mundo. 💎
+  </div>
+
+
+  <div class="message-bubble message-extra-1" id="message9">
+    🌈 Tu presencia es el arcoíris de mis días grises. 🌈
+  </div>
+  
+  <div class="message-bubble message-extra-2" id="message10">
+    ⭐ Nunca olvides lo especial, fuerte y hermosa que eres. ⭐
+  </div>
+
+  <div class="gift" onclick="openGift()">
+    <div class="ribbon-v"></div>
+    <div class="ribbon-h"></div>
+    <div class="lid"></div>
+    <div class="box"></div>
+    <div class="bow"></div>
+  </div>
+
+  <!-- Floating hearts decoration -->
+  <div class="floating-hearts">
+    <span>💕</span><span>💖</span><span>💗</span><span>💙</span><span>💜</span>
+    <span>❤️</span><span>🧡</span><span>💛</span><span>💚</span><span>🤍</span>
+    <span>🌸</span><span>🌺</span><span>🦋</span><span>✨</span><span>🌟</span>
+  </div>
+
+  <!-- Ositos flotantes adorables -->
+  <div class="floating-ositos">
+    <span class="osito osito-1">🐻</span>
+    <span class="osito osito-2">🐻</span>
+    <span class="osito osito-3">🐻</span>
+    <span class="osito osito-4">🐻</span>
+    <span class="osito osito-5">🐻</span>
+    <span class="osito osito-6">🐻</span>
+  </div>
+
+  <!-- Partículas flotantes adicionales -->
+  <div class="floating-particles" id="particles"></div>
+
+  <!-- Flores decorativas -->
+  <div class="floating-flowers">
+    <span class="flower flower-1">🌸</span>
+    <span class="flower flower-2">🌺</span>
+    <span class="flower flower-3">🌻</span>
+    <span class="flower flower-4">🌷</span>
+    <span class="flower flower-5">🌹</span>
+  </div>
+
+  <audio id="celebrationSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmAaBS1+zPDadScE" type="audio/wav">
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
