@@ -3,7 +3,75 @@ let currentMessage = 0;
 const messages = ['message1', 'message2', 'message3', 'message4', 'message5'];
 let musicPlaying = false; // Nueva variable para controlar el estado de la música
 
+// Agregar logs detallados para debugging de audio
+console.log('🎵 Script iniciado - Verificando audio...');
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎵 DOM cargado');
+    
+    // Verificar si el archivo en assets existe
+    fetch('assets/Dios.mp3', { method: 'HEAD' })
+        .then(response => {
+            if (response.ok) {
+                console.log('✅ Archivo assets/Dios.mp3 encontrado');
+            } else {
+                console.log('❌ Archivo assets/Dios.mp3 NO encontrado');
+            }
+        })
+        .catch(() => console.log('❌ No se pudo verificar assets/Dios.mp3'));
+    
+    // Verificar si los archivos existen
+    fetch('music.mp3', { method: 'HEAD' })
+        .then(response => {
+            if (response.ok) {
+                console.log('✅ Archivo music.mp3 encontrado');
+            } else {
+                console.log('❌ Archivo music.mp3 NO encontrado');
+            }
+        })
+        .catch(() => console.log('❌ No se pudo verificar music.mp3'));
+    
+    // Verificar elemento de audio con logs
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    if (backgroundMusic) {
+        console.log('✅ Elemento de audio encontrado');
+        console.log('🎵 Número de sources:', backgroundMusic.querySelectorAll('source').length);
+        
+        // Logs de eventos de audio
+        backgroundMusic.addEventListener('loadstart', () => {
+            console.log('🎵 Audio: Iniciando carga...');
+        });
+        
+        backgroundMusic.addEventListener('canplay', () => {
+            console.log('✅ Audio: Listo para reproducir');
+        });
+        
+        backgroundMusic.addEventListener('error', (e) => {
+            console.error('❌ Error general de audio:', e);
+            console.error('❌ Audio error object:', backgroundMusic.error);
+        });
+        
+        backgroundMusic.addEventListener('loadeddata', () => {
+            console.log('✅ Audio: Datos cargados correctamente');
+        });
+        
+        // Verificar cada source individualmente
+        const sources = backgroundMusic.querySelectorAll('source');
+        sources.forEach((source, index) => {
+            console.log(`🎵 Source ${index + 1}: ${source.src}`);
+            source.addEventListener('error', (e) => {
+                console.error(`❌ Error en source ${index + 1}: ${source.src}`, e);
+            });
+        });
+        
+    } else {
+        console.error('❌ Elemento backgroundMusic NO encontrado');
+    }
+});
+
 function openGift() {
+  console.log('🎁 Clic en caja - Estado actual:', { isGiftOpened, musicPlaying });
+  
   const backgroundMusic = document.getElementById('backgroundMusic');
   
   if (!isGiftOpened) {
@@ -18,6 +86,13 @@ function openGift() {
     
     // Reproducir canción vallenata
     if (backgroundMusic) {
+      // Agregar logs detallados para la música
+      console.log('🎵 Intentando reproducir música...');
+      console.log('🎵 Audio readyState:', backgroundMusic.readyState);
+      console.log('🎵 Audio networkState:', backgroundMusic.networkState);
+      console.log('🎵 Audio duration:', backgroundMusic.duration);
+      console.log('🎵 Audio paused:', backgroundMusic.paused);
+      
       backgroundMusic.volume = 0.6;
       
       const playPromise = backgroundMusic.play();
@@ -25,17 +100,35 @@ function openGift() {
       if (playPromise !== undefined) {
         playPromise.then(() => {
           musicPlaying = true;
-          console.log('🎵 Música iniciada correctamente!');
+          console.log('✅ Música iniciada correctamente!');
+          console.log('🎵 Audio currentTime:', backgroundMusic.currentTime);
+          console.log('🎵 Audio volume:', backgroundMusic.volume);
           showMusicNotification('🎵 ¡Sonando: Que Dios Te Bendiga! 🎵');
         }).catch(error => {
-          console.log('Error al reproducir música:', error);
+          console.error('❌ Error al reproducir música:', error);
+          console.error('❌ Error name:', error.name);
+          console.error('❌ Error message:', error.message);
+          console.error('❌ Error code:', error.code || 'No code');
+          
+          // Log del estado después del error
+          console.log('🔍 Estado después del error:');
+          console.log('🎵 readyState:', backgroundMusic.readyState);
+          console.log('🎵 networkState:', backgroundMusic.networkState);
+          console.log('🎵 error object:', backgroundMusic.error);
+          
           setTimeout(() => {
-            backgroundMusic.play().catch(() => {
+            console.log('🔄 Reintentando reproducir música...');
+            backgroundMusic.play().catch((retryError) => {
+              console.error('❌ Error en reintento:', retryError);
               showMusicNotification('❌ Error: Haz clic en la pantalla para activar la música');
             });
           }, 500);
         });
+      } else {
+        console.error('❌ playPromise es undefined');
       }
+    } else {
+      console.error('❌ backgroundMusic no encontrado en openGift');
     }
     
     startConfetti();
@@ -50,19 +143,24 @@ function openGift() {
     animateFlowers();
     
   } else {
-    // Caja ya abierta - pausar/reanudar música
+    console.log('🎵 Caja ya abierta - controlando música...');
+    
     if (backgroundMusic) {
+      console.log('🎵 Estado actual - paused:', backgroundMusic.paused, 'musicPlaying:', musicPlaying);
+      
       if (musicPlaying && !backgroundMusic.paused) {
-        // Pausar música
+        console.log('⏸️ Pausando música...');
         backgroundMusic.pause();
         musicPlaying = false;
         showMusicNotification('⏸️ Música pausada');
       } else {
-        // Reanudar música
+        console.log('▶️ Intentando reanudar música...');
         backgroundMusic.play().then(() => {
           musicPlaying = true;
           showMusicNotification('▶️ Música reanudada');
-        }).catch(() => {
+          console.log('✅ Música reanudada correctamente');
+        }).catch((error) => {
+          console.error('❌ Error al reanudar música:', error);
           showMusicNotification('❌ Error al reanudar música');
         });
       }
@@ -531,3 +629,42 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+// Agregar función de testing para debugging manual
+function debugAudio() {
+    console.log('🔧 === DEBUG AUDIO ===');
+    const audio = document.getElementById('backgroundMusic');
+    if (audio) {
+        console.log('🎵 Audio element found');
+        console.log('🎵 readyState:', audio.readyState);
+        console.log('🎵 networkState:', audio.networkState);
+        console.log('🎵 paused:', audio.paused);
+        console.log('🎵 duration:', audio.duration);
+        console.log('🎵 currentTime:', audio.currentTime);
+        console.log('🎵 volume:', audio.volume);
+        console.log('🎵 muted:', audio.muted);
+        console.log('🎵 error:', audio.error);
+        
+        const sources = audio.querySelectorAll('source');
+        console.log('🎵 Sources:');
+        sources.forEach((source, i) => {
+            console.log(`  ${i + 1}: ${source.src}`);
+        });
+        
+        // Intentar reproducir
+        console.log('🔧 Intentando reproducir...');
+        audio.play().then(() => {
+            console.log('✅ Reproducción exitosa');
+        }).catch(error => {
+            console.error('❌ Error en reproducción:', error);
+        });
+    } else {
+        console.error('❌ Audio element not found');
+    }
+}
+
+// Hacer función disponible globalmente
+window.debugAudio = debugAudio;
+
+console.log('🎵 Script cargado completamente');
+console.log('💡 Para debugging manual ejecuta: debugAudio()');
