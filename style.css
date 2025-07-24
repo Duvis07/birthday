@@ -489,9 +489,9 @@ canvas {
   }
 }
 
-/* Texto "Felices 29 Nathalia" sobre la caja */
+/* Texto "Felices 29 Mi amor" sobre la caja */
 .gift::before {
-  content: "🎉 Felices 29 Nathalia 🎉";
+  content: "🎉 Felices 29 Amor 🎉";
   position: absolute;
   top: -45px;
   left: 50%;
@@ -583,6 +583,29 @@ canvas {
   }
   75% { 
     transform: translateY(-20px) rotate(-1deg) scale(1.02);
+  }
+}
+
+/* Animaciones para notificaciones de música */
+@keyframes slideDown {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-50%) translateY(-50px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateX(-50%) translateY(0); 
+  }
+}
+
+@keyframes slideUp {
+  0% { 
+    opacity: 1; 
+    transform: translateX(-50%) translateY(0); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateX(-50%) translateY(-50px); 
   }
 }
 

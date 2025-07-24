@@ -1,27 +1,73 @@
 let isGiftOpened = false;
 let currentMessage = 0;
 const messages = ['message1', 'message2', 'message3', 'message4', 'message5'];
+let musicPlaying = false; // Nueva variable para controlar el estado de la música
 
 function openGift() {
-  if (isGiftOpened) return;
-  isGiftOpened = true;
+  const backgroundMusic = document.getElementById('backgroundMusic');
   
-  document.querySelector('.lid').style.transform = 'rotateX(-140deg) translateY(-30px)';
-  
-  // Play celebration sound
-  const audio = document.getElementById('celebrationSound');
-  audio.play().catch(e => console.log('Audio play failed:', e));
-  
-  startConfetti();
-  startHearts();
-  startButterflies();
-  celebrationFlash();
-  showAllMessages();
-  createSparkles();
-  animateBalloons();
-  createFloatingSparkles();
-  createFloatingParticles();
-  animateFlowers();
+  if (!isGiftOpened) {
+    // Primera vez - abrir caja y empezar música
+    isGiftOpened = true;
+    
+    document.querySelector('.lid').style.transform = 'rotateX(-140deg) translateY(-30px)';
+    
+    // Play celebration sound
+    const audio = document.getElementById('celebrationSound');
+    audio.play().catch(e => console.log('Audio play failed:', e));
+    
+    // Reproducir canción vallenata
+    if (backgroundMusic) {
+      backgroundMusic.volume = 0.6;
+      
+      const playPromise = backgroundMusic.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          musicPlaying = true;
+          console.log('🎵 Música iniciada correctamente!');
+          showMusicNotification('🎵 ¡Sonando: Que Dios Te Bendiga! 🎵');
+        }).catch(error => {
+          console.log('Error al reproducir música:', error);
+          setTimeout(() => {
+            backgroundMusic.play().catch(() => {
+              showMusicNotification('❌ Error: Haz clic en la pantalla para activar la música');
+            });
+          }, 500);
+        });
+      }
+    }
+    
+    startConfetti();
+    startHearts();
+    startButterflies();
+    celebrationFlash();
+    showAllMessages();
+    createSparkles();
+    animateBalloons();
+    createFloatingSparkles();
+    createFloatingParticles();
+    animateFlowers();
+    
+  } else {
+    // Caja ya abierta - pausar/reanudar música
+    if (backgroundMusic) {
+      if (musicPlaying && !backgroundMusic.paused) {
+        // Pausar música
+        backgroundMusic.pause();
+        musicPlaying = false;
+        showMusicNotification('⏸️ Música pausada');
+      } else {
+        // Reanudar música
+        backgroundMusic.play().then(() => {
+          musicPlaying = true;
+          showMusicNotification('▶️ Música reanudada');
+        }).catch(() => {
+          showMusicNotification('❌ Error al reanudar música');
+        });
+      }
+    }
+  }
 }
 
 function showAllMessages() {
@@ -368,6 +414,43 @@ function startButterflies() {
     }, i * 300);
   }
 }
+
+// Nueva función para mostrar notificaciones de música
+function showMusicNotification(message) {
+  const notification = document.createElement('div');
+  notification.textContent = message;
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 105, 180, 0.9));
+    color: white;
+    padding: 15px 25px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 14px;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+    text-align: center;
+    animation: slideDown 0.5s ease-out;
+  `;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.animation = 'slideUp 0.5s ease-in forwards';
+    setTimeout(() => notification.remove(), 500);
+  }, 4000);
+}
+
+// Agregar listener para activar música con interacción del usuario
+document.addEventListener('click', function() {
+  const backgroundMusic = document.getElementById('backgroundMusic');
+  if (backgroundMusic && backgroundMusic.paused && isGiftOpened) {
+    backgroundMusic.play().catch(() => {});
+  }
+}, { once: true });
 
 // Resize canvas on window resize
 window.addEventListener('resize', () => {
